@@ -11,7 +11,10 @@ app.use(session({
     secret: 'supersecretkey',
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false } // HTTP for simplicity; secure: true needs HTTPS
+    cookie: { 
+        secure: false, // HTTP for simplicity; secure: true needs HTTPS
+        httpOnly: false // Allow JavaScript access to cookies (vulnerable for demo)
+    }
 }));
 
 // In-memory user data
