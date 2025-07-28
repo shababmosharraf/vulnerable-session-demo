@@ -65,6 +65,28 @@ app.post('/update-data', (req, res) => {
     }
 });
 
+app.get('/dashboard/update-data/:newdata', (req, res) => {
+    if (req.session.user) {
+        let newData = decodeURIComponent(req.params.newdata);
+        
+        // Check if data is base64 encoded (starts with 'b64:')
+        if (newData.startsWith('b64:')) {
+            try {
+                newData = Buffer.from(newData.substring(4), 'base64').toString('utf-8');
+                // console.log('🔓 Base64 decoded payload:', newData);
+            } catch (e) {
+                // console.log('❌ Base64 decode failed:', e.message);
+            }
+        }
+        
+        users[req.session.user].data = newData;
+        console.log(`🎯 Data updated via URL parameter: ${newData}`); // Debug log
+        res.redirect('/dashboard');
+    } else {
+        res.redirect('/');
+    }
+});
+
 app.get('/logout', (req, res) => {
     req.session.destroy();
     res.redirect('/');
